@@ -1,8 +1,6 @@
 "use client";
 
 import {
-  MessageSquareIcon,
-  PanelLeftIcon,
   PenSquareIcon,
   TrashIcon,
 } from "lucide-react";
@@ -42,11 +40,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../ui/alert-dialog";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+
 
 export function AppSidebar({ user }: { user: User | undefined }) {
   const router = useRouter();
-  const { setOpenMobile, toggleSidebar } = useSidebar();
+  const { setOpenMobile } = useSidebar();
   const { mutate } = useSWRConfig();
   const [showDeleteAllDialog, setShowDeleteAllDialog] = useState(false);
 
@@ -73,26 +71,34 @@ export function AppSidebar({ user }: { user: User | undefined }) {
               <div className="group/logo relative flex items-center justify-center">
                 <SidebarMenuButton
                   asChild
-                  className="size-8 !px-0 items-center justify-center group-data-[collapsible=icon]:group-hover/logo:opacity-0"
-                  tooltip="Chatbot"
+                  className="size-auto !px-2 items-center justify-center group-data-[collapsible=icon]:!px-0 group-data-[collapsible=icon]:size-8"
+                  tooltip="pepper.ai"
                 >
                   <Link href="/" onClick={() => setOpenMobile(false)}>
-                    <MessageSquareIcon className="size-4 text-sidebar-foreground/50" />
+                    <span
+                      className="font-bold text-sm tracking-tight group-data-[collapsible=icon]:hidden"
+                      style={{
+                        background: "linear-gradient(135deg, #f97316, #ef4444, #ec4899)",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        backgroundClip: "text",
+                      }}
+                    >
+                      pepper.ai
+                    </span>
+                    <span
+                      className="hidden font-bold text-xs group-data-[collapsible=icon]:inline"
+                      style={{
+                        background: "linear-gradient(135deg, #f97316, #ef4444, #ec4899)",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        backgroundClip: "text",
+                      }}
+                    >
+                      🌶
+                    </span>
                   </Link>
                 </SidebarMenuButton>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <SidebarMenuButton
-                      className="pointer-events-none absolute inset-0 size-8 opacity-0 group-data-[collapsible=icon]:pointer-events-auto group-data-[collapsible=icon]:group-hover/logo:opacity-100"
-                      onClick={() => toggleSidebar()}
-                    >
-                      <PanelLeftIcon className="size-4" />
-                    </SidebarMenuButton>
-                  </TooltipTrigger>
-                  <TooltipContent className="hidden md:block" side="right">
-                    Open sidebar
-                  </TooltipContent>
-                </Tooltip>
               </div>
               <div className="group-data-[collapsible=icon]:hidden">
                 <SidebarTrigger className="text-sidebar-foreground/60 transition-colors duration-150 hover:text-sidebar-foreground" />
