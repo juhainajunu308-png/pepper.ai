@@ -5,6 +5,7 @@ export const titleModel = {
   name: "Claude 4.6 Opus",
   provider: "anthropic",
   description: "Fast model for title generation",
+  gatewayOrder: ["anthropic"],
 };
 
 export type ModelCapabilities = {
