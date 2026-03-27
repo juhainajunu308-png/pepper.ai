@@ -39,8 +39,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "../ui/alert-dialog";
-
+} from "@/components/ui/alert-dialog";
 
 export function AppSidebar({ user }: { user: User | undefined }) {
   const router = useRouter();
@@ -48,18 +47,30 @@ export function AppSidebar({ user }: { user: User | undefined }) {
   const { mutate } = useSWRConfig();
   const [showDeleteAllDialog, setShowDeleteAllDialog] = useState(false);
 
-  const handleDeleteAll = () => {
-    setShowDeleteAllDialog(false);
-    router.replace("/");
-    mutate(unstable_serialize(getChatHistoryPaginationKey), [], {
-      revalidate: false,
-    });
+  const handleDeleteAll = async () => {
+    try {
+      setShowDeleteAllDialog(false);
+      
+      // Delete all chats from the server
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/history`, {
+        method: "DELETE",
+      });
 
-    fetch(`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/history`, {
-      method: "DELETE",
-    });
+      if (!response.ok) {
+        throw new Error("Failed to delete chats");
+      }
 
-    toast.success("All chats deleted");
+      // Clear the cache and redirect
+      await mutate(unstable_serialize(getChatHistoryPaginationKey), [], {
+        revalidate: false,
+      });
+
+      router.push("/");
+      toast.success("All chats deleted");
+    } catch (error) {
+      console.error("Error deleting chats:", error);
+      toast.error("Failed to delete chats");
+    }
   };
 
   return (
@@ -147,8 +158,8 @@ export function AppSidebar({ user }: { user: User | undefined }) {
       </Sidebar>
 
       <AlertDialog
-        onOpenChange={setShowDeleteAllDialog}
         open={showDeleteAllDialog}
+        onOpenChange={setShowDeleteAllDialog}
       >
         <AlertDialogContent>
           <AlertDialogHeader>
